@@ -1,10 +1,9 @@
-var mysql = require('mysql');
+var oracledb = require('oracledb');
 
-module.exports = mysql.createPool({
-    connectionLimit: 10,
-    port: "1521",
-    host: "cis550proj.c91hlqvzcxsq.us-east-1.rds.amazonaws.com",
+oracledb.initOracleClient({libDir: '/Users/angelasun1234/Downloads/instantclient_19_8'});
+
+module.exports = oracledb.createPool({
     user: "admin",
     password: "TH7yR5AYe5WpKbZF",
-    SID: "CIS550DB"
+    connectionString: "cis550proj.c91hlqvzcxsq.us-east-1.rds.amazonaws.com/CIS550DB"
   });

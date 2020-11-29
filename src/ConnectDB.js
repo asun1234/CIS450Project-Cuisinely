@@ -1,43 +1,41 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default class ConnectDB extends React.Component {
+class ConnectDB extends React.Component {
   constructor(props) {
     super(props);
-
-    // The state maintained by this React Component.
-    // This component maintains the list of people.
     this.state = {
-      people: [],
+      topten: [],
     };
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
-    fetch("http://localhost:8081/people", {
+    fetch("http://localhost:8081/topten", {
       method: "GET",
     })
       .then(res => res.json())
-      .then(peopleList => {
-        console.log(peopleList)
-
-        let peopleDivs = peopleList.map((person, i) => (
-          <div key={i} className="person">
-            <div className="title">{person.recipeTitle}</div>
-          </div>
-        ));
-
-        this.setState({
-          people: peopleDivs,
+      .then(tenList => {
+        if(!tenList) return;
+        var arr= tenList.rows;
+        var tenDivs = arr.map((item, i) => {
+          console.log(<div id = {i}>{item}</div>);
+          return (<div id = {i}>{item}</div>);
         });
+        this.setState({
+          topten: tenDivs
+        })
       })
-      .catch(err => console.log("THERE'S A PROBLEM\n" + err)); // Print the error if there is one.
   }
 
   render() {
     return (
     <div className="results-container" id="results">
-        {this.state.people}
+      <p>Top Ten Recipes:</p>
+        {this.state.topten}
     </div>
     );
   }
 }
+
+export default ConnectDB;

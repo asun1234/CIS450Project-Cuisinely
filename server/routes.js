@@ -1,28 +1,82 @@
 var config = require('./db-config.js');
-//var mysql = require('mysql');
 
-config.connectionLimit = 1000;
-var connection = config;
+config.connectionLimit = 100;
+var poolPromise = config;
 
 //handling routes
-function getAllPeps(req, res) {
+function getTopTen(req, res) {
     var query = `
       SELECT *
-      FROM (SELECT recipetitle FROM recipes)
-      WHERE rownum <= 100;
+      FROM (SELECT recipetitle FROM recipes ORDER BY rating DESC)
+      WHERE rownum <= 10
       `;
-    connection.query(query, function(err, rows, fields) {
-      if (err) {
-        console.log('ENDPOINT DOES NOT WORK\n');
-        console.log(err);
-      }else {
-        console.log('endpoint works!');
-        console.log(rows);
-        res.json(rows);
-      }
-    });
-  };
+  poolPromise
+        .then(pool => {
+          pool.getConnection()
+              .then(connection => {
+                connection.execute(query, function (err, rows, fields) {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    res.json(rows);
+                  }
+                });
+              });
+        })
+        .catch(err => { throw new Error('Error initializing db connection: ', err);})
+        ;
+};
 
-  module.exports = {
-    getAllPeps: getAllPeps
-  }
+
+function getBananas(req, res) {
+  var query = `
+  SELECT *
+  FROM (SELECT recipetitle FROM recipes
+  WHERE LOWER(recipetitle) LIKE '%banana%'
+  AND timetaken < 30 AND rating > 4.8)
+  `;
+poolPromise
+      .then(pool => {
+        pool.getConnection()
+            .then(connection => {
+              connection.execute(query, function (err, rows, fields) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  res.json(rows);
+                }
+              });
+            });
+      })
+      .catch(err => { throw new Error('Error initializing db connection: ', err);})
+      ;
+};
+
+function getCategories(req, res) {
+  var query = `
+  SELECT *
+  FROM (SELECT category FROM recipe_categories)
+  WHERE rownum <= 10
+  `;
+poolPromise
+      .then(pool => {
+        pool.getConnection()
+            .then(connection => {
+              connection.execute(query, function (err, rows, fields) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  res.json(rows);
+                }
+              });
+            });
+      })
+      .catch(err => { throw new Error('Error initializing db connection: ', err);})
+      ;
+};
+
+module.exports = {
+  getTopTen: getTopTen,
+  getBananas: getBananas,
+  getCategories: getCategories
+}
