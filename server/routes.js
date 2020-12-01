@@ -30,10 +30,14 @@ function getTopTen(req, res) {
 
 function getBananas(req, res) {
   var query = `
-  SELECT *
-  FROM (SELECT recipetitle FROM recipes
-  WHERE LOWER(recipetitle) LIKE '%banana%'
-  AND timetaken < 30 AND rating > 4.8)
+  SELECT recipetitle
+  FROM recipes
+  WHERE id IN (SELECT recipeid FROM (SELECT recipeid
+  FROM recipe_ingredients
+  WHERE LOWER(ingredient) LIKE '%banana%'))
+  AND timetaken < 30
+  AND rating > 4.8
+  ORDER BY rating DESC
   `;
 poolPromise
       .then(pool => {
@@ -52,10 +56,14 @@ poolPromise
       ;
 };
 
+//fix query later
 function getCategories(req, res) {
   var query = `
-  SELECT *
-  FROM (SELECT category FROM recipe_categories)
+  SELECT category
+  FROM (SELECT category, COUNT(recipeid) AS count
+  FROM recipe_categories
+  GROUP BY category
+  ORDER BY count DESC)
   WHERE rownum <= 10
   `;
 poolPromise

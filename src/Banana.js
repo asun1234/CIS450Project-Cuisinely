@@ -18,7 +18,7 @@ class Banana extends React.Component {
         if(!bananasList) return;
         var arr= bananasList.rows;
         var bananaDivs = arr.map((item, i) => {
-          return (<div id = {i}>{item}</div>);
+        return (<div id = {i}>{i+1}: {item}</div>);
         });
         this.setState({
           bananas: bananaDivs
@@ -29,7 +29,7 @@ class Banana extends React.Component {
   render() {
     return (
     <div className="results-container" id="results">
-        <p>Quick Banana Recipes:</p>
+        <p>Top Banana Recipes:</p>
         {this.state.bananas}
     </div>
     );

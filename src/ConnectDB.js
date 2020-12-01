@@ -19,8 +19,7 @@ class ConnectDB extends React.Component {
         if(!tenList) return;
         var arr= tenList.rows;
         var tenDivs = arr.map((item, i) => {
-          console.log(<div id = {i}>{item}</div>);
-          return (<div id = {i}>{item}</div>);
+          return (<div id = {i}>{i+1}: {item}</div>);
         });
         this.setState({
           topten: tenDivs
