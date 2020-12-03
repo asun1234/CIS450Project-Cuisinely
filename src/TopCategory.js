@@ -1,5 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {Table} from 'react-bootstrap';
+import './style/recipeRow.css'
 
 class TopCategory extends React.Component {
   constructor(props) {
@@ -18,8 +20,11 @@ class TopCategory extends React.Component {
       .then(tenList => {
         if(!tenList) return;
         var arr= tenList.rows;
-        var tenDivs = arr.map((item, i) => {
-          return (<div id = {i}>{i+1}: {item}</div>);
+        var tenDivs = arr.map((category, i) => {
+          return (<tr>
+            <td>{i+1}</td>
+            <td>{category}</td>
+          </tr>);
         });
         this.setState({
             topcat: tenDivs
@@ -30,8 +35,18 @@ class TopCategory extends React.Component {
   render() {
     return (
     <div className="results-container" id="results">
-      <p>Top Ten Categories:</p>
+      <h3>Top Ten Categories</h3>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody>
         {this.state.topcat}
+        </tbody>
+      </Table>
     </div>
     );
   }

@@ -1,5 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {Table} from 'react-bootstrap';
+import './style/Dashboard.css';
 
 class ConnectDB extends React.Component {
   constructor(props) {
@@ -18,8 +20,11 @@ class ConnectDB extends React.Component {
       .then(tenList => {
         if(!tenList) return;
         var arr= tenList.rows;
-        var tenDivs = arr.map((item, i) => {
-          return (<div id = {i}>{i+1}: {item}</div>);
+        var tenDivs = arr.map((recipe, i) => {
+          return (<tr>
+            <td>{i+1}</td>
+            <td>{recipe}</td>
+          </tr>);
         });
         this.setState({
           topten: tenDivs
@@ -30,8 +35,18 @@ class ConnectDB extends React.Component {
   render() {
     return (
     <div className="results-container" id="results">
-      <p>Top Ten Recipes:</p>
+      <h3>Top Ten Recipes</h3>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Recipe</th>
+          </tr>
+        </thead>
+        <tbody>
         {this.state.topten}
+        </tbody>
+      </Table>
     </div>
     );
   }
