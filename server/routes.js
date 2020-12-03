@@ -60,7 +60,6 @@ function getSearch(req, res) {
 SELECT *
 FROM (SELECT * FROM recipes WHERE LOWER(recipetitle) LIKE '%${input}%')
 ORDER BY rating DESC
-WHERE rownum <= 30
 `;
   poolPromise
   .then(pool => {

@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from "react";
 import {
   Route,
-  NavLink,
   HashRouter
 } from "react-router-dom";
 import ConnectDB from "./ConnectDB";
@@ -12,31 +11,37 @@ import TopCategory from "./TopCategory";
 import SearchRecipe from "./SearchRecipe";
 import SearchIngredient from "./SearchIngredient";
 
-import {Button,ButtonGroup } from 'react-bootstrap';
+import {Navbar,Nav } from 'react-bootstrap';
 
 class App extends React.Component{
 
   
   render(){
     return (
+      <div>
+  <Navbar bg="primary" variant="dark" sticky="top" >
+  <Navbar.Brand href="#home">CIS 450 Project: Recipe Search</Navbar.Brand>
+  <Navbar.Toggle aria-controls="basic-navbar-nav" />
+  <Navbar.Collapse id="basic-navbar-nav">
       <HashRouter>
-        <div className= "App">
-          <h1>CIS 450: Course Project</h1>
-          <ButtonGroup> 
-            <Button variant="outline-primary"><NavLink to="/topten">Top Recipes</NavLink></Button>
-            <Button variant="outline-primary"><NavLink to="/topcat">Top Categories</NavLink></Button>
-            <Button variant="outline-primary"><NavLink to="/search">Search by Title</NavLink></Button>
-            <Button variant="outline-primary"><NavLink to="/searchIngredient">Search by Ingredient</NavLink></Button>
-
-          </ButtonGroup>
-          <div className="content">
+      <Nav className="mr-auto">
+        <Nav.Link href="#topten">Top Recipes</Nav.Link>
+        <Nav.Link href="#topcat">Top Categories</Nav.Link>
+        <Nav.Link href="#search">Search by Title</Nav.Link>
+        <Nav.Link href="#searchIngredient">Search by Ingredient</Nav.Link>
+      </Nav>
+       </HashRouter>
+  </Navbar.Collapse>
+</Navbar>
+      <HashRouter>
+          <div className="App">
             <Route exact path="/topten" component={ConnectDB}/>
             <Route exact path="/topcat" component={TopCategory}/>
             <Route path="/search" component={SearchRecipe}/>
             <Route exact path="/searchIngredient" component={SearchIngredient}/>
           </div>
-        </div>
       </HashRouter>
+      </div>
     );
   }
 }
