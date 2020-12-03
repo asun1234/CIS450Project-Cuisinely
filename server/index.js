@@ -12,6 +12,8 @@ app.get('/topten', routes.getTopTen);
 app.get('/topcat', routes.getCategories);
 app.get('/search/:byTitle', routes.getSearch);
 app.get('/searchIngredient/:byIngredient', routes.getSearchIngredient);
+
+app.get('/lowcal', routes.getLowCal);
 app.listen(8081, () => {
 	console.log(`Server listening on PORT 8081`);
 });

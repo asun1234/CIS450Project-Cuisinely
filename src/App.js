@@ -10,8 +10,9 @@ import ConnectDB from "./ConnectDB";
 import TopCategory from "./TopCategory";
 import SearchRecipe from "./SearchRecipe";
 import SearchIngredient from "./SearchIngredient";
+import LowCal from "./LowCal";
 
-import {Navbar,Nav } from 'react-bootstrap';
+import {Navbar,Nav, NavDropdown} from 'react-bootstrap';
 
 class App extends React.Component{
 
@@ -27,8 +28,13 @@ class App extends React.Component{
       <Nav className="mr-auto">
         <Nav.Link href="#topten">Top Recipes</Nav.Link>
         <Nav.Link href="#topcat">Top Categories</Nav.Link>
-        <Nav.Link href="#search">Search by Title</Nav.Link>
-        <Nav.Link href="#searchIngredient">Search by Ingredient</Nav.Link>
+        <NavDropdown title="Search" id="collasible-nav-dropdown">
+          <NavDropdown.Item href="#search">Search by Title</NavDropdown.Item>
+          <NavDropdown.Item  href="#searchIngredient">Search by Ingredient</NavDropdown.Item>
+      </NavDropdown>
+      <NavDropdown title="Healthy" id="collasible-nav-dropdown">
+          <NavDropdown.Item href="#lowcal">Low Calorie</NavDropdown.Item>
+      </NavDropdown>
       </Nav>
        </HashRouter>
   </Navbar.Collapse>
@@ -39,6 +45,7 @@ class App extends React.Component{
             <Route exact path="/topcat" component={TopCategory}/>
             <Route path="/search" component={SearchRecipe}/>
             <Route exact path="/searchIngredient" component={SearchIngredient}/>
+            <Route exact path="/lowcal" component={LowCal}/>
           </div>
       </HashRouter>
       </div>

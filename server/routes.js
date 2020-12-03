@@ -3,31 +3,34 @@ var config = require('./db-config.js');
 config.connectionLimit = 100;
 var poolPromise = config;
 
-//handling routes
+function queryDB(res, query, input) {
+  poolPromise
+      .then(pool => {
+          pool.getConnection()
+              .then(connection => {
+                  connection.execute(query, function (err, rows, fields) {
+                      if (err) {
+                          console.log(err);
+                      } else {
+                          res.json(rows);
+                      }
+                  });
+              });
+      })
+      .catch(err => {
+          throw new Error('Error initializing db connection: ', err);
+      });
+}
+
 function getTopTen(req, res) {
     var query = `
       SELECT *
       FROM (SELECT recipetitle FROM recipes ORDER BY rating DESC)
       WHERE rownum <= 10
       `;
-  poolPromise
-        .then(pool => {
-          pool.getConnection()
-              .then(connection => {
-                connection.execute(query, function (err, rows, fields) {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    res.json(rows);
-                  }
-                });
-              });
-        })
-        .catch(err => { throw new Error('Error initializing db connection: ', err);})
-        ;
+      queryDB(res, query, '')
 };
 
-//fix query later
 function getCategories(req, res) {
   var query = `
   SELECT category
@@ -37,21 +40,7 @@ function getCategories(req, res) {
   ORDER BY count DESC)
   WHERE rownum <= 10
   `;
-poolPromise
-      .then(pool => {
-        pool.getConnection()
-            .then(connection => {
-              connection.execute(query, function (err, rows, fields) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  res.json(rows);
-                }
-              });
-            });
-      })
-      .catch(err => { throw new Error('Error initializing db connection: ', err);})
-      ;
+  queryDB(res, query, '')
 };
 
 function getSearch(req, res) {
@@ -61,21 +50,7 @@ SELECT *
 FROM (SELECT * FROM recipes WHERE LOWER(recipetitle) LIKE '%${input}%')
 ORDER BY rating DESC
 `;
-  poolPromise
-  .then(pool => {
-    pool.getConnection()
-        .then(connection => {
-          connection.execute(query, function (err, rows, fields) {
-            if (err) {
-              console.log(err);
-            } else {
-              res.json(rows);
-            }
-          });
-        });
-  })
-  .catch(err => { throw new Error('Error initializing db connection: ', err);})
-  ;
+queryDB(res, query, input)
 };
 
 function getSearchIngredient(req, res) {
@@ -88,26 +63,26 @@ function getSearchIngredient(req, res) {
   WHERE LOWER(ingredient) LIKE '%${input}%'))
   ORDER BY rating DESC
 `;
-  poolPromise
-  .then(pool => {
-    pool.getConnection()
-        .then(connection => {
-          connection.execute(query, function (err, rows, fields) {
-            if (err) {
-              console.log(err);
-            } else {
-              res.json(rows);
-            }
-          });
-        });
-  })
-  .catch(err => { throw new Error('Error initializing db connection: ', err);})
-  ;
+queryDB(res, query, input)
+};
+
+function getLowCal(req, res) {
+  var query = `
+  WITH low_cal_recipes AS 
+  (SELECT recipeid, calories FROM nutrition_data 
+    WHERE calories < 300),
+    ans as (SELECT recipetitle, calories, r.rating
+    FROM low_cal_recipes c JOIN recipes r ON recipeid = id
+    ORDER BY calories ASC, r.rating DESC)
+    SELECT * FROM ans WHERE rownum <= 30
+    `;
+    queryDB(res, query, '')
 };
 
 module.exports = {
   getTopTen: getTopTen,
   getCategories: getCategories,
   getSearch: getSearch,
-  getSearchIngredient: getSearchIngredient
+  getSearchIngredient: getSearchIngredient,
+  getLowCal: getLowCal
 }
