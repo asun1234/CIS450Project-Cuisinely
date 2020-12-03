@@ -11,6 +11,10 @@ import TopCategory from "./TopCategory";
 import SearchRecipe from "./SearchRecipe";
 import SearchIngredient from "./SearchIngredient";
 import LowCal from "./LowCal";
+import LowCarb from "./LowCarb";
+import LowFat from "./LowFat";
+import LowSugar from "./LowSugar";
+import HighProtein from "./HighProtein.js";
 
 import {Navbar,Nav, NavDropdown} from 'react-bootstrap';
 
@@ -34,6 +38,10 @@ class App extends React.Component{
       </NavDropdown>
       <NavDropdown title="Healthy" id="collasible-nav-dropdown">
           <NavDropdown.Item href="#lowcal">Low Calorie</NavDropdown.Item>
+          <NavDropdown.Item href="#lowfat">Low Fat</NavDropdown.Item>
+          <NavDropdown.Item href="#lowcarb">Low Carb</NavDropdown.Item>
+          <NavDropdown.Item href="#lowsugar">Low Sugar</NavDropdown.Item>
+          <NavDropdown.Item href="#highpro">High Protein</NavDropdown.Item>
       </NavDropdown>
       </Nav>
        </HashRouter>
@@ -46,6 +54,10 @@ class App extends React.Component{
             <Route path="/search" component={SearchRecipe}/>
             <Route exact path="/searchIngredient" component={SearchIngredient}/>
             <Route exact path="/lowcal" component={LowCal}/>
+            <Route exact path="/lowfat" component={LowFat}/>
+            <Route exact path="/lowcarb" component={LowCarb}/>
+            <Route exact path="/lowsugar" component={LowSugar}/>
+            <Route exact path="/highpro" component={HighProtein}/>
           </div>
       </HashRouter>
       </div>
