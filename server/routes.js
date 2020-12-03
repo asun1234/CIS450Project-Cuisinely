@@ -27,35 +27,6 @@ function getTopTen(req, res) {
         ;
 };
 
-
-function getBananas(req, res) {
-  var query = `
-  SELECT recipetitle
-  FROM recipes
-  WHERE id IN (SELECT recipeid FROM (SELECT recipeid
-  FROM recipe_ingredients
-  WHERE LOWER(ingredient) LIKE '%banana%'))
-  AND timetaken < 30
-  AND rating > 4.8
-  ORDER BY rating DESC
-  `;
-poolPromise
-      .then(pool => {
-        pool.getConnection()
-            .then(connection => {
-              connection.execute(query, function (err, rows, fields) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  res.json(rows);
-                }
-              });
-            });
-      })
-      .catch(err => { throw new Error('Error initializing db connection: ', err);})
-      ;
-};
-
 //fix query later
 function getCategories(req, res) {
   var query = `
@@ -84,11 +55,39 @@ poolPromise
 };
 
 function getSearch(req, res) {
-  var input = req.params.inputSearch;
+  var input = req.params.byTitle;
   var query = `
 SELECT *
 FROM (SELECT * FROM recipes WHERE LOWER(recipetitle) LIKE '%${input}%')
+ORDER BY rating DESC
 WHERE rownum <= 30
+`;
+  poolPromise
+  .then(pool => {
+    pool.getConnection()
+        .then(connection => {
+          connection.execute(query, function (err, rows, fields) {
+            if (err) {
+              console.log(err);
+            } else {
+              res.json(rows);
+            }
+          });
+        });
+  })
+  .catch(err => { throw new Error('Error initializing db connection: ', err);})
+  ;
+};
+
+function getSearchIngredient(req, res) {
+  var input = req.params.byIngredient;
+  var query = `
+  SELECT *
+  FROM recipes
+  WHERE id IN (SELECT recipeid FROM (SELECT recipeid
+  FROM recipe_ingredients
+  WHERE LOWER(ingredient) LIKE '%${input}%'))
+  ORDER BY rating DESC
 `;
   poolPromise
   .then(pool => {
@@ -109,7 +108,7 @@ WHERE rownum <= 30
 
 module.exports = {
   getTopTen: getTopTen,
-  getBananas: getBananas,
   getCategories: getCategories,
-  getSearch: getSearch
+  getSearch: getSearch,
+  getSearchIngredient: getSearchIngredient
 }

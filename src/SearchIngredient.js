@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import './style/Dashboard.css';
 import {Table, Form, Button} from 'react-bootstrap';
 
-class SearchRecipe extends React.Component {
+class SearchIngredient extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,7 +18,7 @@ class SearchRecipe extends React.Component {
     }
 
     searchRecipes(inputSearch) {
-        fetch(`http://localhost:8081/search/${inputSearch}`, {
+        fetch(`http://localhost:8081/searchIngredient/${inputSearch}`, {
             method: "GET",
         })
             .then(res => res.json())
@@ -46,9 +46,9 @@ class SearchRecipe extends React.Component {
     render() {
         return (
             <div className="Dashboard" class = "results-container">
-                <h3>Search for a Recipe by Title</h3>
+                <h3>Search for a Recipe with Ingredient</h3>
                 <Form>
-                <Form.Control type="recipe" placeholder="ingredient in title" value={this.state.curr_search}
+                <Form.Control type="recipe" placeholder="ingredient" value={this.state.curr_search}
                         onChange={e => {
                             this.setState({curr_search: e.target.value});
                         }} />
@@ -57,7 +57,7 @@ class SearchRecipe extends React.Component {
                     </Button>
                 </Form>
                 <br></br>
-                <Table striped bordered hover>
+                <Table striped bordered hover size = "sm">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -77,7 +77,7 @@ class SearchRecipe extends React.Component {
     }
 }
 
-export default SearchRecipe;
+export default SearchIngredient;
 
 
 
