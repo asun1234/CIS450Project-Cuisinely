@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/topten', routes.getTopTen);
 app.get('/bananas', routes.getBananas);
 app.get('/topcat', routes.getCategories);
+app.get('/search/:inputSearch', routes.getSearch);
 
 app.listen(8081, () => {
 	console.log(`Server listening on PORT 8081`);

@@ -83,8 +83,33 @@ poolPromise
       ;
 };
 
+function getSearch(req, res) {
+  var input = req.params.inputSearch;
+  var query = `
+SELECT *
+FROM (SELECT * FROM recipes WHERE LOWER(recipetitle) LIKE '%${input}%')
+WHERE rownum <= 30
+`;
+  poolPromise
+  .then(pool => {
+    pool.getConnection()
+        .then(connection => {
+          connection.execute(query, function (err, rows, fields) {
+            if (err) {
+              console.log(err);
+            } else {
+              res.json(rows);
+            }
+          });
+        });
+  })
+  .catch(err => { throw new Error('Error initializing db connection: ', err);})
+  ;
+};
+
 module.exports = {
   getTopTen: getTopTen,
   getBananas: getBananas,
-  getCategories: getCategories
+  getCategories: getCategories,
+  getSearch: getSearch
 }
