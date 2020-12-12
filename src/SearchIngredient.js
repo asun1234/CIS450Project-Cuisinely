@@ -1,7 +1,8 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './style/Dashboard.css';
-import {Table, Form, Button} from 'react-bootstrap';
+import {Table, Form,FormCheck, Button} from 'react-bootstrap';
+import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 
 class SearchIngredient extends React.Component {
     constructor(props) {
@@ -33,6 +34,13 @@ class SearchIngredient extends React.Component {
                       <td>{recipe[3]}</td>
                       <td>{recipe[4]}</td>
                       <td>{Number((recipe[5]).toFixed(2))}</td>
+                      <td>
+                        <Form>
+                            <FormCheck>
+                            <FormCheckInput type="checkbox" id="blankCheckbox" value={i+1} aria-label="..."></FormCheckInput>
+                            </FormCheck>
+                        </Form>
+                        </td>
                     </tr>);
                   });
 
@@ -66,6 +74,7 @@ class SearchIngredient extends React.Component {
                         <th>Num. Steps</th>
                         <th>Num. Ingredients</th>
                         <th>Rating</th>
+                        <th>Add to Ingredient Cart</th>
                     </tr>
                     </thead>
                     <tbody>

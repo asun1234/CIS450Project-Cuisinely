@@ -1,7 +1,8 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Table} from 'react-bootstrap';
+import {Table, Form, FormCheck } from 'react-bootstrap';
 import './style/Dashboard.css';
+import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 
 class LowFat extends React.Component {
   constructor(props) {
@@ -26,6 +27,13 @@ class LowFat extends React.Component {
             <td>{recipe[0]}</td>
             <td>{recipe[1]}</td>
             <td>{Number((recipe[2]).toFixed(2))}</td>
+            <td>
+              <Form>
+                <FormCheck>
+                  <FormCheckInput type="checkbox" id="blankCheckbox" value={i + 1} aria-label="..."></FormCheckInput>
+                </FormCheck>
+              </Form>
+            </td>
           </tr>);
         });
         this.setState({
@@ -45,6 +53,7 @@ class LowFat extends React.Component {
             <th>Recipe</th>
             <th>Total Fat</th>
             <th>Rating</th>
+            <th>Add to Recipe Cart</th>
           </tr>
         </thead>
         <tbody>

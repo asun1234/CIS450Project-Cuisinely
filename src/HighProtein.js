@@ -1,7 +1,8 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Table} from 'react-bootstrap';
+import {Table, Form, FormCheck } from 'react-bootstrap';
 import './style/Dashboard.css';
+import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 
 class HighProtein extends React.Component {
   constructor(props) {
@@ -26,6 +27,13 @@ class HighProtein extends React.Component {
             <td>{recipe[0]}</td>
             <td>{Number((recipe[1]).toFixed(1))}</td>
             <td>{Number((recipe[2]).toFixed(2))}</td>
+            <td>
+              <Form>
+                <FormCheck>
+                  <FormCheckInput type="checkbox" id="blankCheckbox" value={i + 1} aria-label="..."></FormCheckInput>
+                </FormCheck>
+              </Form>
+            </td>
           </tr>);
         });
         this.setState({
@@ -38,13 +46,14 @@ class HighProtein extends React.Component {
     return (
     <div className="results-container" id="results">
       <h3>High Protein</h3>
-      <Table striped bordered hover variant = "dark">
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th>#</th>
             <th>Recipe</th>
             <th>Protein</th>
             <th>Rating</th>
+            <th>Add to Recipe Cart</th>
           </tr>
         </thead>
         <tbody>

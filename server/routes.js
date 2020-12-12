@@ -1,8 +1,7 @@
 var config = require('./db-config.js');
-
+const secondsToWait = 650;
 config.connectionLimit = 100;
 var poolPromise = config;
-
 function queryDB(res, query, input) {
   poolPromise
       .then(pool => {
@@ -16,6 +15,14 @@ function queryDB(res, query, input) {
                       }
                   });
               });
+      })
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve();
+            console.log('Done waiting, proceeding to use the connection');
+          }, secondsToWait * 1000);
+        });
       })
       .catch(err => {
           throw new Error('Error initializing db connection: ', err);
