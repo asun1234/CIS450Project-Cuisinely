@@ -16,9 +16,13 @@ import LowCarb from "./LowCarb";
 import LowFat from "./LowFat";
 import LowSugar from "./LowSugar";
 import HighProtein from "./HighProtein.js";
-import {Navbar,Nav, NavDropdown, Form, Button, FormControl} from 'react-bootstrap';
+
+import {Navbar,Nav, NavDropdown} from 'react-bootstrap';
+
 class App extends React.Component{
   render(){
+    
+    //handle random gif on homepage
     var gif = [];
     gif[0] = <iframe src="https://giphy.com/embed/b5Hcaz7EPz26I" width="480" height="357" frameBorder="0" ></iframe>;
     gif[1] = <iframe src="https://giphy.com/embed/N23cG6apipMmQ" width="480" height="342" frameBorder="0"></iframe>
@@ -27,14 +31,15 @@ class App extends React.Component{
     gif[4] = <iframe src="https://giphy.com/embed/10sTpXkrooA2bK" width="480" height="357" frameBorder="0"></iframe>
     var randVal= Math.floor(Math.random() * 10);
     var randIndex = randVal % 5;
+
     return (
       <div>
   <Navbar bg="primary" variant="dark" sticky="top" >
   <Navbar.Brand href="#home">
-  Recipe Search 🍽
+  Recipe Search 👩🏻‍🍳
     </Navbar.Brand>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
-  <Navbar.Collapse id="basic-navbar-nav">
+  <Navbar.Collapse id="responsive-navbar-nav">
       <HashRouter>
       <Nav className="mr-auto">
         <Nav.Link href="#topten">Top Recipes 🏆</Nav.Link>
@@ -50,6 +55,11 @@ class App extends React.Component{
           <NavDropdown.Item href="#lowsugar">Low Sugar</NavDropdown.Item>
           <NavDropdown.Item href="#highpro">High Protein</NavDropdown.Item>
       </NavDropdown>
+      </Nav>
+
+      <Nav>
+      <Nav.Link href="#recipeCart">Recipes List ✍️</Nav.Link>
+      <Nav.Link href="#ingredientCart">Ingredient Cart 🛒</Nav.Link>
       </Nav>
        </HashRouter>
   </Navbar.Collapse>
