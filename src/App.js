@@ -16,10 +16,8 @@ import LowCarb from "./LowCarb";
 import LowFat from "./LowFat";
 import LowSugar from "./LowSugar";
 import HighProtein from "./HighProtein.js";
-
-import {Navbar,Nav, NavDropdown} from 'react-bootstrap';
+import {Navbar,Nav, NavDropdown, Form, Button, FormControl} from 'react-bootstrap';
 class App extends React.Component{
-
   render(){
     var gif = [];
     gif[0] = <iframe src="https://giphy.com/embed/b5Hcaz7EPz26I" width="480" height="357" frameBorder="0" ></iframe>;
@@ -32,18 +30,20 @@ class App extends React.Component{
     return (
       <div>
   <Navbar bg="primary" variant="dark" sticky="top" >
-  <Navbar.Brand href="#home">CIS 450 Project: Recipe Search</Navbar.Brand>
+  <Navbar.Brand href="#home">
+  Recipe Search 🍽
+    </Navbar.Brand>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
       <HashRouter>
       <Nav className="mr-auto">
-        <Nav.Link href="#topten">Top Recipes</Nav.Link>
-        <Nav.Link href="#topcat">Top Categories</Nav.Link>
-        <NavDropdown title="Search" id="collasible-nav-dropdown">
-          <NavDropdown.Item href="#search">Search by Title</NavDropdown.Item>
-          <NavDropdown.Item  href="#searchIngredient">Search by Ingredient</NavDropdown.Item>
+        <Nav.Link href="#topten">Top Recipes 🏆</Nav.Link>
+        <Nav.Link href="#topcat">Top Categories 🏆</Nav.Link>
+        <NavDropdown title="Search ❓" id="collasible-nav-dropdown">
+          <NavDropdown.Item href="#search">Search by Title ✨</NavDropdown.Item>
+          <NavDropdown.Item  href="#searchIngredient">Search by Ingredient ⚡️</NavDropdown.Item>
       </NavDropdown>
-      <NavDropdown title="Healthy" id="collasible-nav-dropdown">
+      <NavDropdown title="Healthy 🥦" id="collasible-nav-dropdown">
           <NavDropdown.Item href="#lowcal">Low Calorie</NavDropdown.Item>
           <NavDropdown.Item href="#lowfat">Low Fat</NavDropdown.Item>
           <NavDropdown.Item href="#lowcarb">Low Carb</NavDropdown.Item>

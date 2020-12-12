@@ -60,7 +60,7 @@ class SearchIngredient extends React.Component {
                         onChange={e => {
                             this.setState({curr_search: e.target.value});
                         }} />
-                    <Button variant="primary" onClick={() => this.searchRecipes(this.state.curr_search)}>
+                    <Button variant="outline-secondary" onClick={() => this.searchRecipes(this.state.curr_search)}>
                         {'Submit'}
                     </Button>
                 </Form>
