@@ -1,3 +1,5 @@
+process.env.UV_THREADPOOL_SIZE = 10
+
 var config = require('./db-config.js');
 const secondsToWait = 650;
 config.connectionLimit = 100;
