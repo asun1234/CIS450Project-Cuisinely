@@ -1,24 +1,49 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './style/Dashboard.css';
-import {Table, Form,FormCheck, Button} from 'react-bootstrap';
-import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
+import { Table,Button, Form} from 'react-bootstrap';
+import Checkbox from '@material-ui/core/Checkbox';
 
 class SearchIngredient extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rowResults: [], curr_search: ''
-
+            rowResults: [],
+            curr_search: '',
+            recipes: []
         };
-        this.componentDidMount = this.componentDidMount.bind(this);
     }
 
-    componentDidMount() {
+    onChangeRec(e) {
+        var recipesArr = this.state.recipes;
+        let index = 0;
 
+        if (e.target.checked) {
+            recipesArr.push(e.target.value)
+        } else {
+            index = recipesArr.indexOf(e.target.value)
+            recipesArr.splice(index, 1)
+        }
+
+        this.setState({
+            recipes: recipesArr
+        })
+
+        if (localStorage.getItem("recipeCartJSON") === null) {
+            localStorage.setItem("recipeCartJSON", JSON.stringify(this.state.recipes));
+        } else {
+            var existing = JSON.parse(localStorage.getItem('recipeCartJSON'));
+            existing = existing.concat(this.state.recipes);
+            var set = existing.filter((x, i, a) => a.indexOf(x) === i)
+            console.log(set);
+            localStorage.setItem('recipeCartJSON', JSON.stringify(set));
+        }
     }
 
     searchRecipes(inputSearch) {
+        const handleClick = (event) => {
+            this.checked = event.target.checked;
+        };
         fetch(`http://localhost:8081/searchIngredient/${inputSearch}`, {
             method: "GET",
         })
@@ -28,21 +53,25 @@ class SearchIngredient extends React.Component {
                 var arr = searchResults.rows;
                 var searchDivs = arr.map((recipe, i) => {
                     return (<tr>
-                      <td>{i+1}</td>
-                      <td>{recipe[1]}</td>
-                      <td>{recipe[2]}</td>
-                      <td>{recipe[3]}</td>
-                      <td>{recipe[4]}</td>
-                      <td>{Number((recipe[5]).toFixed(2))}</td>
-                      <td>
-                        <Form>
-                            <FormCheck>
-                            <FormCheckInput type="checkbox" id="blankCheckbox" value={i+1} aria-label="..."></FormCheckInput>
-                            </FormCheck>
-                        </Form>
+                        <td>{i + 1}</td>
+                        <td>{recipe[1]}</td>
+                        <td>{recipe[2]}</td>
+                        <td>{recipe[3]}</td>
+                        <td>{recipe[4]}</td>
+                        <td>{Number((recipe[5]).toFixed(2))}</td>
+                        <td>
+                            <Checkbox
+                                key={i + 1}
+                                color="primary"
+                                checked={this.checked}
+                                onClick={handleClick}
+                                value={recipe[1]}
+                                onChange={this.onChangeRec.bind(this)}
+                            >
+                            </Checkbox>
                         </td>
                     </tr>);
-                  });
+                });
 
                 this.setState({
                     rowResults: searchDivs
@@ -53,32 +82,32 @@ class SearchIngredient extends React.Component {
 
     render() {
         return (
-            <div className="Dashboard" class = "results-container">
+            <div className="Dashboard" class="results-container">
                 <h3>Search for a Recipe with Ingredient</h3>
                 <Form>
-                <Form.Control type="recipe" placeholder="ingredient" value={this.state.curr_search}
+                    <Form.Control type="recipe" placeholder="ingredient" value={this.state.curr_search}
                         onChange={e => {
-                            this.setState({curr_search: e.target.value});
+                            this.setState({ curr_search: e.target.value });
                         }} />
                     <Button variant="outline-secondary" onClick={() => this.searchRecipes(this.state.curr_search)}>
                         {'Submit'}
                     </Button>
                 </Form>
                 <br></br>
-                <Table striped bordered hover size = "sm">
+                <Table striped bordered hover size="sm">
                     <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Recipe</th>
-                        <th>Time</th>
-                        <th>Num. Steps</th>
-                        <th>Num. Ingredients</th>
-                        <th>Rating</th>
-                        <th>Add to Ingredient Cart</th>
-                    </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Recipe</th>
+                            <th>Time</th>
+                            <th>Num. Steps</th>
+                            <th>Num. Ingredients</th>
+                            <th>Rating</th>
+                            <th>Add to Recipe Cart</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {this.state.rowResults}
+                        {this.state.rowResults}
                     </tbody>
                 </Table>
             </div>

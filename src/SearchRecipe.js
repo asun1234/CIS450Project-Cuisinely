@@ -1,24 +1,50 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './style/Dashboard.css';
-import {Table, Form,  FormCheck,Button} from 'react-bootstrap';
-import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
+import {Table, Form,Button} from 'react-bootstrap';
+import Checkbox from '@material-ui/core/Checkbox';
 
 class SearchRecipe extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rowResults: [], curr_search: ''
-
+            rowResults: [],
+            curr_search: '',
+            recipes: []
         };
-        this.componentDidMount = this.componentDidMount.bind(this);
     }
+    
+    onChangeRec(e) {
+        var recipesArr = this.state.recipes;
+        let index = 0;
 
-    componentDidMount() {
+        if (e.target.checked) {
+            recipesArr.push(e.target.value)
+        } else {
+            index = recipesArr.indexOf(e.target.value)
+            recipesArr.splice(index, 1)
+        }
 
+        this.setState({
+            recipes: recipesArr
+        })
+
+        if (localStorage.getItem("recipeCartJSON") === null) {
+            localStorage.setItem("recipeCartJSON", JSON.stringify(this.state.recipes));
+        } else {
+            var existing = JSON.parse(localStorage.getItem('recipeCartJSON'));
+            existing = existing.concat(this.state.recipes);
+            var set = existing.filter((x, i, a) => a.indexOf(x) === i)
+            console.log(set);
+            localStorage.setItem('recipeCartJSON', JSON.stringify(set));
+        }
     }
-
+    
     searchRecipes(inputSearch) {
+        const handleClick = (event) => {
+            this.checked = event.target.checked;
+        };
+
         fetch(`http://localhost:8081/search/${inputSearch}`, {
             method: "GET",
         })
@@ -35,11 +61,15 @@ class SearchRecipe extends React.Component {
                       <td>{recipe[4]}</td>
                       <td>{Number((recipe[5]).toFixed(2))}</td>
                       <td>
-                        <Form>
-                            <FormCheck>
-                            <FormCheckInput type="checkbox" id="blankCheckbox" value={i+1} aria-label="..."></FormCheckInput>
-                            </FormCheck>
-                        </Form>
+                      <Checkbox
+                                key={i + 1}
+                                color="primary"
+                                checked={this.checked}
+                                onClick={handleClick}
+                                value={recipe[1]}
+                                onChange={this.onChangeRec.bind(this)}
+                            >
+                            </Checkbox>
                         </td>
                     </tr>);
                   });
