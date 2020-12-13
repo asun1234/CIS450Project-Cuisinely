@@ -67,6 +67,7 @@ class App extends React.Component{
 </Navbar>
       <HashRouter>
           <div className="App">
+          <script crossOrigin = "true" src="..."></script>
             <Route exact path="/topten" component={ConnectDB}/>
             <Route exact path="/topcat" component={TopCategory}/>
             <Route path="/search" component={SearchRecipe}/>

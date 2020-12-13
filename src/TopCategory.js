@@ -1,8 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Table, FormCheck, Form} from 'react-bootstrap';
+import {Table} from 'react-bootstrap';
 import './style/recipeRow.css'
-import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 
 class TopCategory extends React.Component {
   constructor(props) {
@@ -23,16 +22,11 @@ class TopCategory extends React.Component {
         if(!tenList) return;
         var arr= tenList.rows;
         var tenDivs = arr.map((category, i) => {
+          var cat = category.toString();
+          var catCap = cat.charAt(0).toUpperCase() + cat.slice(1)
           return (<tr>
             <td>{i+1}</td>
-            <td>{category}</td>
-              <td>
-              <Form>
-                <FormCheck>
-                  <FormCheckInput type="checkbox" id="blankCheckbox" value={i+1} aria-label="..."></FormCheckInput>
-                </FormCheck>
-              </Form>
-              </td>
+            <td>{catCap}</td>
           </tr>);
         });
         this.setState({
@@ -50,9 +44,6 @@ class TopCategory extends React.Component {
           <tr>
             <th>#</th>
             <th>Category</th>
-            <th>
-              Add to Ingredient Cart
-            </th>
           </tr>
         </thead>
         <tbody>

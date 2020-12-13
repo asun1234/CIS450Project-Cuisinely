@@ -87,7 +87,7 @@ class SearchIngredient extends React.Component {
                 <Form>
                     <Form.Group as={Row}>
                     <Col sm="11">
-                        <Form.Control type="recipe" placeholder="ingredient in recipe" value={this.state.curr_search}
+                        <Form.Control type="recipe" placeholder="ingredient in recip" value={this.state.curr_search}
                             onChange={e => {
                                 this.setState({ curr_search: e.target.value });
                             }}/>

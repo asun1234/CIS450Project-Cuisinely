@@ -77,8 +77,8 @@ queryDB(res, query, input)
 
 function getLowCal(req, res) {
   var query = `
-  WITH low_cal_recipes AS 
-  (SELECT recipeid, calories FROM nutrition_data 
+  WITH low_cal_recipes AS
+  (SELECT recipeid, calories FROM nutrition_data
     WHERE calories < 300),
     ans as (SELECT recipetitle, calories, r.rating
     FROM low_cal_recipes c JOIN recipes r ON recipeid = id
@@ -90,8 +90,8 @@ function getLowCal(req, res) {
 
 function getHighProtein(req, res) {
   var query = `
-  WITH low_cal_recipes AS 
-  (SELECT recipeid, protein FROM nutrition_data 
+  WITH low_cal_recipes AS
+  (SELECT recipeid, protein FROM nutrition_data
     WHERE protein > 15),
     ans as (SELECT recipetitle, protein, r.rating
     FROM low_cal_recipes c JOIN recipes r ON recipeid = id
@@ -99,6 +99,20 @@ function getHighProtein(req, res) {
     SELECT * FROM ans WHERE rownum <= 30
     `;
     queryDB(res, query, '')
+};
+
+function getIngredientsByRecipe(req, res) {
+  var input = req.params.recipeTitle;
+  var query = `
+  SELECT DISTINCT ingredient
+  FROM recipe_ingredients r
+  WHERE r.recipeId IN
+  (SELECT id
+    FROM recipes
+    WHERE recipetitle LIKE '%${input}')
+    ORDER BY ingredient ASC
+  `;
+  queryDB(res, query, input)
 };
 
 function getLowFat(req, res) {
@@ -116,8 +130,8 @@ function getLowFat(req, res) {
 
 function getLowCarb(req, res) {
   var query = `
-  WITH low_cal_recipes AS 
-  (SELECT recipeid, carbohydrates FROM nutrition_data 
+  WITH low_cal_recipes AS
+  (SELECT recipeid, carbohydrates FROM nutrition_data
     WHERE carbohydrates < 10),
     ans as (SELECT recipetitle, carbohydrates, r.rating
     FROM low_cal_recipes c JOIN recipes r ON recipeid = id
@@ -129,8 +143,8 @@ function getLowCarb(req, res) {
 
 function getLowSugar(req, res) {
   var query = `
-  WITH low_cal_recipes AS 
-  (SELECT recipeid, sugar FROM nutrition_data 
+  WITH low_cal_recipes AS
+  (SELECT recipeid, sugar FROM nutrition_data
     WHERE sugar < 10),
     ans as (SELECT recipetitle, sugar, r.rating
     FROM low_cal_recipes c JOIN recipes r ON recipeid = id
@@ -147,6 +161,7 @@ module.exports = {
   getSearchIngredient: getSearchIngredient,
   getLowCal: getLowCal,
   getHighProtein: getHighProtein,
+  getIngredientsByRecipe: getIngredientsByRecipe,
   getLowFat: getLowFat,
   getLowCarb: getLowCarb,
   getLowSugar: getLowSugar
