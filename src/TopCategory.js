@@ -9,6 +9,7 @@ class TopCategory extends React.Component {
     super(props);
     this.state = {
         topcat: [],
+      ingredients: []
     };
     this.componentDidMount = this.componentDidMount.bind(this);
   }

@@ -16,6 +16,7 @@ import LowCarb from "./LowCarb";
 import LowFat from "./LowFat";
 import LowSugar from "./LowSugar";
 import HighProtein from "./HighProtein.js";
+import RecipesList from "./RecipesList.js";
 
 import {Navbar,Nav, NavDropdown} from 'react-bootstrap';
 
@@ -75,6 +76,7 @@ class App extends React.Component{
             <Route exact path="/lowcarb" component={LowCarb}/>
             <Route exact path="/lowsugar" component={LowSugar}/>
             <Route exact path="/highpro" component={HighProtein}/>
+            <Route exact path="/recipeCart" component={RecipesList}/>
             <Route exact path="/home">
             <h3>Welcome to our recipes app! Happy cooking :)</h3>
             <div className="results-container" id="results">
