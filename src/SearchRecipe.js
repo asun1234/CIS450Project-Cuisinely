@@ -1,7 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './style/Dashboard.css';
-import {Table, Form,Button} from 'react-bootstrap';
+import {Row, Col, Table, Form,Button} from 'react-bootstrap';
 import Checkbox from '@material-ui/core/Checkbox';
 
 class SearchRecipe extends React.Component {
@@ -86,13 +86,17 @@ class SearchRecipe extends React.Component {
             <div className="Dashboard" class = "results-container">
                 <h3>Search for a Recipe by Title</h3>
                 <Form>
-                <Form.Control type="recipe" placeholder="ingredient in title" value={this.state.curr_search}
-                        onChange={e => {
-                            this.setState({curr_search: e.target.value});
-                        }} />
-                    <Button variant="primary" onClick={() => this.searchRecipes(this.state.curr_search)}>
-                        {'Submit'}
-                    </Button>
+                    <Form.Group as={Row}>
+                    <Col sm="11">
+                        <Form.Control type="recipe" placeholder="keyword in title" value={this.state.curr_search}
+                            onChange={e => {
+                                this.setState({ curr_search: e.target.value });
+                            }}/>
+                     </Col>
+                        <Button variant= "outline-primary" onClick={() => this.searchRecipes(this.state.curr_search)}>
+                            {'Submit'}
+                        </Button>
+                    </Form.Group>
                 </Form>
                 <br></br>
                 <Table striped bordered hover size = "sm">
