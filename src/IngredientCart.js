@@ -22,7 +22,6 @@ class IngredientCart extends React.Component {
             .then(searchResults => {
                 if (!searchResults) return;
                 var searchIng = searchResults.rows;
-                console.log(searchIng);
                 if (this.state.justIngred.length > 0) {
                     var oldDivs = this.state.justIngred;
                     oldDivs = [...new Set(oldDivs)];
@@ -41,6 +40,14 @@ class IngredientCart extends React.Component {
                             <tr key={index + 1}>
                                 <td>{index + 1}</td>
                                 <td>{currIng}</td>
+                                <td>
+                                    <Button
+                                        variant="outline-secondary"
+                                        value={index}
+                                        onClick={this.deleteItem.bind(this)}>
+                                        Delete
+                                    </Button>
+                                </td>
                             </tr>);
                         index++;
                         finalSet.add(currIng);
@@ -48,10 +55,26 @@ class IngredientCart extends React.Component {
                 }
                 //console.log(divs);
                 this.setState({
-                    justIngred: searchIng,
+                    justIngred: finalSet,
                     ingredList: divs
                 })
             })
+    }
+
+    deleteItem(e) {
+        var list = this.state.justIngred;
+        var index = e.target.value;
+        console.log("pre split list: " + list);
+        list.splice(index, 1)
+        console.log("post split list: " + list);
+        var divs = this.state.ingredList;
+        
+        
+        this.setState({
+            justIngred: list
+        })
+        
+        this.componentDidMount()
     }
 
     deleteAll() {
@@ -84,6 +107,7 @@ class IngredientCart extends React.Component {
                         <tr>
                             <th>#</th>
                             <th>Ingredient</th>
+                            <th>Delete Ingredient</th>
                         </tr>
                     </thead>
                     <tbody>

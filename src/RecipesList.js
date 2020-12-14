@@ -115,7 +115,7 @@ class RecipesList extends React.Component {
               <th>#</th>
               <th>Recipe</th>
               <th>Add Ingredients</th>
-              <th>Delete Ingredient</th>
+              <th>Delete Recipe</th>
             </tr>
           </thead>
           <tbody>

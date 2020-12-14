@@ -29,7 +29,7 @@ class LowFat extends React.Component {
       recipes: recipesArr
     })
     
-    if(localStorage.getItem("recipeCartJSON") === null){
+    if(localStorage.getItem("recipeCartJSON") === null || !e.target.checked){
       localStorage.setItem("recipeCartJSON", JSON.stringify(this.state.recipes));
     }else{
       var existing = JSON.parse(localStorage.getItem('recipeCartJSON'));
