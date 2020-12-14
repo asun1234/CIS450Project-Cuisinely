@@ -1,14 +1,14 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Table } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 
 class IngredientCart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             ingredList: [],
-            justIngred: [], 
-            midDivs:[]
+            justIngred: [],
+            midDivs: []
         };
         this.componentDidMount = this.componentDidMount.bind(this);
     }
@@ -36,7 +36,7 @@ class IngredientCart extends React.Component {
                 var index = 0;
                 for (i = 0; i < searchIng.length; i++) {
                     const currIng = searchIng[i][0];
-                    if(!finalSet.has(currIng)){
+                    if (!finalSet.has(currIng)) {
                         divs[index] = (
                             <tr key={index + 1}>
                                 <td>{index + 1}</td>
@@ -54,12 +54,22 @@ class IngredientCart extends React.Component {
             })
     }
 
+    deleteAll() {
+        localStorage.removeItem("recipeToIng");
+        this.setState({
+            ingredList: [],
+            justIngred: [],
+            midDivs: []
+        })
+    }
 
     componentDidMount() {
-        var recipes = JSON.parse(localStorage.getItem("recipeToIng"));
-        var i;
-        for (i = 0; i < recipes.length; i++) {
-            this.getIngredient(recipes[i]);
+        if (localStorage.getItem("recipeToIng") !== null) {
+            var recipes = JSON.parse(localStorage.getItem("recipeToIng"));
+            var i;
+            for (i = 0; i < recipes.length; i++) {
+                this.getIngredient(recipes[i]);
+            }
         }
     }
 
@@ -80,6 +90,11 @@ class IngredientCart extends React.Component {
                         {this.state.ingredList}
                     </tbody>
                 </Table>
+                <Button
+                    variant="outline-primary"
+                    onClick={this.deleteAll.bind(this)}>
+                    Delete All
+          </Button>
             </div>
         );
     }

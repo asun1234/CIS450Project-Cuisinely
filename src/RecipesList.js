@@ -1,6 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Table} from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 import Checkbox from '@material-ui/core/Checkbox';
 import './style/Dashboard.css';
 
@@ -34,20 +34,20 @@ class RecipesList extends React.Component {
       var existing = JSON.parse(localStorage.getItem('recipeToIng'));
       existing = existing.concat(this.state.recipesToIngredients);
       var set = existing.filter((x, i, a) => a.indexOf(x) === i)
-      console.log(set);
       localStorage.setItem('recipeToIng', JSON.stringify(set));
     }
   }
-  
+
   componentDidMount() {
     const handleClickCheck = (event) => {
       this.checked = event.target.checked;
     };
+
     if (localStorage.getItem("recipeCartJSON") !== null) {
       var parsedArr = JSON.parse(localStorage.getItem("recipeCartJSON"));
       var recipeDivs = parsedArr.map((recipe, i) => {
         return (
-          <tr key = {i+1}>
+          <tr key={i + 1}>
             <td>{i + 1}</td>
             <td>{recipe}</td>
             <td>
@@ -69,26 +69,38 @@ class RecipesList extends React.Component {
     this.setState({
       recipesList: recipeDivs
     })
-    console.log(this.state.recipeDivs);
   }
+
+  deleteAll() {
+    localStorage.removeItem("recipeCartJSON")
+    this.setState({
+      recipesList: []
+    })
+  }
+
   render() {
     return (
       <div className="results-container" id="results">
-        <script crossOrigin = "true" src="..."></script>
+        <script crossOrigin="true" src="..."></script>
         <h3>Recipes List</h3>
         <p></p>
-          <Table striped bordered>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Recipe</th>
-                <th>Add Ingredients</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.recipesList}
-            </tbody>
-          </Table>
+        <Table striped bordered>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Recipe</th>
+              <th>Add Ingredients</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.recipesList}
+          </tbody>
+        </Table>
+        <Button
+          variant="outline-primary"
+          onClick={this.deleteAll.bind(this)}>
+          Delete All
+          </Button>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-process.env.UV_THREADPOOL_SIZE = 10
+process.env.UV_THREADPOOL_SIZE = 100
 
 var config = require('./db-config.js');
 const secondsToWait = 65000;
@@ -68,6 +68,7 @@ function getSearch(req, res) {
   var query = `
 SELECT *
 FROM (SELECT * FROM recipes WHERE LOWER(recipetitle) LIKE '%${input}%')
+WHERE rownum <= 50
 ORDER BY rating DESC
 `;
 queryDB(res, query, input)
@@ -81,6 +82,7 @@ function getSearchIngredient(req, res) {
   WHERE id IN (SELECT recipeid FROM (SELECT recipeid
   FROM recipe_ingredients
   WHERE LOWER(ingredient) LIKE '%${input}%'))
+  AND rownum <= 50
   ORDER BY rating DESC
 `;
 queryDB(res, query, input)
