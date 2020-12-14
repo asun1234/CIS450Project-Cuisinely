@@ -1,4 +1,5 @@
 import React from "react";
+import 'core-js';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Table, Button } from 'react-bootstrap';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -9,6 +10,7 @@ class RecipesList extends React.Component {
     super(props);
     this.state = {
       recipesList: [],
+      justRecipes: [],
       recipesToIngredients: []
     };
   }
@@ -28,9 +30,9 @@ class RecipesList extends React.Component {
       recipesToIngredients: recipesArr
     })
 
-    if (localStorage.getItem("recipeToIng") === null) {
+    if (localStorage.getItem("recipeToIng") === null || !e.target.checked) {
       localStorage.setItem("recipeToIng", JSON.stringify(this.state.recipesToIngredients));
-    } else {
+    } else if (e.target.checked) {
       var existing = JSON.parse(localStorage.getItem('recipeToIng'));
       existing = existing.concat(this.state.recipesToIngredients);
       var set = existing.filter((x, i, a) => a.indexOf(x) === i)
@@ -38,11 +40,33 @@ class RecipesList extends React.Component {
     }
   }
 
+  deleteItem(e) {
+
+    var list = this.state.justRecipes;
+    var index = list.indexOf(e.target.value)
+    list.splice(index, 1)
+    console.log(list);
+    this.setState({
+      justRecipes: list
+    })
+
+    localStorage.setItem('recipeCartJSON', JSON.stringify(this.state.justRecipes));
+    this.componentDidMount()
+  }
+
+
+  deleteAll() {
+    localStorage.removeItem("recipeCartJSON")
+    this.setState({
+      recipesList: []
+    })
+  }
+
+
   componentDidMount() {
-    const handleClickCheck = (event) => {
+    const handleCheck = (event) => {
       this.checked = event.target.checked;
     };
-
     if (localStorage.getItem("recipeCartJSON") !== null) {
       var parsedArr = JSON.parse(localStorage.getItem("recipeCartJSON"));
       var recipeDivs = parsedArr.map((recipe, i) => {
@@ -55,26 +79,27 @@ class RecipesList extends React.Component {
                 key={i + 1}
                 color="primary"
                 checked={this.checked}
-                onClick={handleClickCheck}
+                onClick={handleCheck}
                 value={recipe}
                 onChange={this.addToIng.bind(this)}
               >
               </Checkbox>
             </td>
+            <td>
+              <Button
+                variant="outline-secondary"
+                value={recipe}
+                onClick={this.deleteItem.bind(this)}>
+                Delete
+          </Button>
+            </td>
           </tr>
         );
       });
     }
-
     this.setState({
+      justRecipes: parsedArr,
       recipesList: recipeDivs
-    })
-  }
-
-  deleteAll() {
-    localStorage.removeItem("recipeCartJSON")
-    this.setState({
-      recipesList: []
     })
   }
 
@@ -90,6 +115,7 @@ class RecipesList extends React.Component {
               <th>#</th>
               <th>Recipe</th>
               <th>Add Ingredients</th>
+              <th>Delete Ingredient</th>
             </tr>
           </thead>
           <tbody>

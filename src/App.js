@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import 'core-js';
 import React from "react";
 import {
   Route,
