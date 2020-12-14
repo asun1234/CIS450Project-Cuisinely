@@ -1,6 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, ButtonGroup } from 'react-bootstrap';
 
 class IngredientCart extends React.Component {
     constructor(props) {
@@ -10,6 +10,7 @@ class IngredientCart extends React.Component {
             justIngred: [],
             midDivs: []
         };
+        this.getSuggestedRecipes = this.getSuggestedRecipes.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
     }
 
@@ -31,7 +32,8 @@ class IngredientCart extends React.Component {
                 searchIng = searchIng.sort();
                 var i;
                 var divs = [];
-                const finalSet = new Set();
+                var finalSet = new Set();
+
                 var index = 0;
                 for (i = 0; i < searchIng.length; i++) {
                     const currIng = searchIng[i][0];
@@ -53,9 +55,9 @@ class IngredientCart extends React.Component {
                         finalSet.add(currIng);
                     }
                 }
-                //console.log(divs);
+
                 this.setState({
-                    justIngred: finalSet,
+                    justIngred: searchIng,
                     ingredList: divs
                 })
             })
@@ -68,12 +70,11 @@ class IngredientCart extends React.Component {
         list.splice(index, 1)
         console.log("post split list: " + list);
         var divs = this.state.ingredList;
-        
-        
+
         this.setState({
             justIngred: list
         })
-        
+
         this.componentDidMount()
     }
 
@@ -84,6 +85,25 @@ class IngredientCart extends React.Component {
             justIngred: [],
             midDivs: []
         })
+        this.componentDidMount()
+    }
+
+    getSuggestedRecipes() {
+        var ingList = '';
+        var recList = '';
+        if (this.state.justIngred.length !== null && localStorage.getItem("recipeCartJSON") !== null) {
+            ingList = this.state.justIngred.map(function (a) { return "'" + a + "'"; }).join(",");
+            console.log(ingList);
+            let recs = JSON.parse(localStorage.getItem("recipeCartJSON"));
+            //console.log(recs[0]);
+            recList = recs.map(function (a) { return "'" + a + "'"; }).join(",");
+            console.log(recList);
+        }
+        this.props.history.push({
+            pathname: `/suggestedRecipes/`,
+            recipes: {recList},
+            ingredients: {ingList},
+        });
     }
 
     componentDidMount() {
@@ -114,11 +134,19 @@ class IngredientCart extends React.Component {
                         {this.state.ingredList}
                     </tbody>
                 </Table>
-                <Button
-                    variant="outline-primary"
-                    onClick={this.deleteAll.bind(this)}>
-                    Delete All
-          </Button>
+                <ButtonGroup>
+                    <Button
+                        variant="outline-primary"
+                        onClick={this.deleteAll.bind(this)}>
+                        Delete All
+                </Button>
+                    <Button
+                        variant="outline-primary"
+                        onClick={this.getSuggestedRecipes}>
+                        Suggested Recipes
+                </Button>
+                </ButtonGroup>
+
             </div>
         );
     }

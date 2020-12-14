@@ -183,6 +183,29 @@ SELECT * FROM category_recipes
   queryDB(res, query, input)
 };
 
+function getSuggestedRecipesByIngredients(req, res) {
+  var inputRecs = req.params.currRecipes;
+  var inputIng = req.params.ingredients;
+  var query = `
+    WITH relevant_recipes AS (
+      SELECT recipeid, ingredient
+      FROM recipe_ingredients
+      WHERE ingredient IN (${inputIng})
+    ),
+    count_ingr AS (
+      SELECT recipeid, COUNT(ingredient) AS num_ingredients_overlap
+      FROM relevant_recipes
+      GROUP BY recipeid
+    )
+    SELECT recipetitle
+    FROM recipes
+      JOIN count_ingr ON id = recipeid AND num_ingredients_overlap = numberofingredients
+    WHERE recipetitle NOT IN (${inputRecs})
+    ORDER BY recipetitle ASC
+    `;
+  queryDB(res, query, inputIng)
+};
+
 module.exports = {
   getTopTen: getTopTen,
   getCategories: getCategories,
@@ -194,5 +217,6 @@ module.exports = {
   getLowFat: getLowFat,
   getLowCarb: getLowCarb,
   getLowSugar: getLowSugar,
-  getTopRecipesByCat: getTopRecipesByCat
+  getTopRecipesByCat: getTopRecipesByCat,
+  getSuggestedRecipesByIngredients: getSuggestedRecipesByIngredients
 }
