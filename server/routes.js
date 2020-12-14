@@ -6,38 +6,38 @@ config.connectionLimit = 100;
 var poolPromise = config;
 function queryDB(res, query, input) {
   poolPromise
-      .then(pool => {
-          pool.getConnection()
-              .then(connection => {
-                  connection.execute(query, function (err, rows, fields) {
-                      if (err) {
-                          console.log(err);
-                      } else {
-                          res.json(rows);
-                      }
-                  });
-              });
-      })
-      .then(() => {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            resolve();
-            console.log('Done waiting, proceeding to use the connection');
-          }, secondsToWait * 1000);
+    .then(pool => {
+      pool.getConnection()
+        .then(connection => {
+          connection.execute(query, function (err, rows, fields) {
+            if (err) {
+              console.log(err);
+            } else {
+              res.json(rows);
+            }
+          });
         });
-      })
-      .catch(err => {
-          throw new Error('Error initializing db connection: ', err);
+    })
+    .then(() => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve();
+          console.log('Done waiting, proceeding to use the connection');
+        }, secondsToWait * 1000);
       });
+    })
+    .catch(err => {
+      throw new Error('Error initializing db connection: ', err);
+    });
 }
 
 function getTopTen(req, res) {
-    var query = `
+  var query = `
       SELECT *
       FROM (SELECT recipetitle FROM recipes ORDER BY rating DESC)
       WHERE rownum <= 10
       `;
-      queryDB(res, query, '')
+  queryDB(res, query, '')
 };
 
 function getCategories(req, res) {
@@ -71,7 +71,7 @@ FROM (SELECT * FROM recipes WHERE LOWER(recipetitle) LIKE '%${input}%')
 WHERE rownum <= 50
 ORDER BY rating DESC
 `;
-queryDB(res, query, input)
+  queryDB(res, query, input)
 };
 
 function getSearchIngredient(req, res) {
@@ -85,7 +85,7 @@ function getSearchIngredient(req, res) {
   AND rownum <= 50
   ORDER BY rating DESC
 `;
-queryDB(res, query, input)
+  queryDB(res, query, input)
 };
 
 function getLowCal(req, res) {
@@ -98,7 +98,7 @@ function getLowCal(req, res) {
     ORDER BY calories ASC, r.rating DESC)
     SELECT * FROM ans WHERE rownum <= 30
     `;
-    queryDB(res, query, '')
+  queryDB(res, query, '')
 };
 
 function getHighProtein(req, res) {
@@ -111,7 +111,7 @@ function getHighProtein(req, res) {
     ORDER BY protein DESC, r.rating DESC)
     SELECT * FROM ans WHERE rownum <= 30
     `;
-    queryDB(res, query, '')
+  queryDB(res, query, '')
 };
 
 function getIngredientsByRecipe(req, res) {
@@ -138,7 +138,7 @@ function getLowFat(req, res) {
     ORDER BY totalfat ASC, r.rating DESC)
     SELECT * FROM ans WHERE rownum <= 30
     `;
-    queryDB(res, query, '')
+  queryDB(res, query, '')
 };
 
 function getLowCarb(req, res) {
@@ -151,7 +151,7 @@ function getLowCarb(req, res) {
     ORDER BY carbohydrates ASC, r.rating DESC)
     SELECT * FROM ans WHERE rownum <= 30
     `;
-    queryDB(res, query, '')
+  queryDB(res, query, '')
 };
 
 function getLowSugar(req, res) {
@@ -164,7 +164,23 @@ function getLowSugar(req, res) {
     ORDER BY sugar ASC, r.rating DESC)
     SELECT * FROM ans WHERE rownum <= 30
     `;
-    queryDB(res, query, '')
+  queryDB(res, query, '')
+};
+
+function getTopRecipesByCat(req, res) {
+  var input = req.params.category;
+  var query = `
+  WITH category_recipes AS (
+    SELECT recipetitle, rating
+    FROM recipes R JOIN (SELECT recipeid
+        FROM recipe_categories
+        WHERE category = '${input}') C ON R.id = C.recipeid
+    ORDER BY rating DESC
+)
+SELECT * FROM category_recipes
+    WHERE rownum <= 50
+    `;
+  queryDB(res, query, input)
 };
 
 module.exports = {
@@ -177,5 +193,6 @@ module.exports = {
   getIngredientsByRecipe: getIngredientsByRecipe,
   getLowFat: getLowFat,
   getLowCarb: getLowCarb,
-  getLowSugar: getLowSugar
+  getLowSugar: getLowSugar,
+  getTopRecipesByCat: getTopRecipesByCat
 }

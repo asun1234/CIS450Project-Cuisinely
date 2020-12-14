@@ -18,6 +18,7 @@ import LowSugar from "./LowSugar";
 import HighProtein from "./HighProtein.js";
 import RecipesList from "./RecipesList.js";
 import IngredientCart from "./IngredientCart.js";
+import TopHistory from "./TopHistory.js";
 
 import {Navbar,Nav, NavDropdown} from 'react-bootstrap';
 
@@ -80,6 +81,7 @@ class App extends React.Component{
             <Route exact path="/highpro" component={HighProtein}/>
             <Route exact path="/recipeCart" component={RecipesList}/>
             <Route exact path="/ingredientCart" component={IngredientCart}/>
+            <Route path="/toprecs" component={TopHistory}/>
             <Route exact path="/">
             <h3>Welcome to our recipes app! Happy cooking :)</h3>
             <div className="results-container" id="results">

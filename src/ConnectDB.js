@@ -79,7 +79,7 @@ class ConnectDB extends React.Component {
     return (
       <div className="results-container" id="results">
         <h3>Top Ten Recipes</h3>
-        <Table striped bordered hover>
+        <Table striped >
           <thead>
             <tr>
               <th>#</th>

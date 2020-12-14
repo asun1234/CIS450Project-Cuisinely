@@ -81,7 +81,7 @@ class LowCarb extends React.Component {
     return (
     <div className="results-container" id="results">
       <h3>Low Carb</h3>
-      <Table striped bordered hover>
+      <Table striped>
         <thead>
           <tr>
             <th>#</th>
