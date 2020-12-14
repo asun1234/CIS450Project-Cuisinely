@@ -42,14 +42,6 @@ class IngredientCart extends React.Component {
                             <tr key={index + 1}>
                                 <td>{index + 1}</td>
                                 <td>{currIng}</td>
-                                <td>
-                                    <Button
-                                        variant="outline-secondary"
-                                        value={index}
-                                        onClick={this.deleteItem.bind(this)}>
-                                        Delete
-                                    </Button>
-                                </td>
                             </tr>);
                         index++;
                         finalSet.add(currIng);
@@ -61,21 +53,6 @@ class IngredientCart extends React.Component {
                     ingredList: divs
                 })
             })
-    }
-
-    deleteItem(e) {
-        var list = this.state.justIngred;
-        var index = e.target.value;
-        console.log("pre split list: " + list);
-        list.splice(index, 1)
-        console.log("post split list: " + list);
-        var divs = this.state.ingredList;
-
-        this.setState({
-            justIngred: list
-        })
-
-        this.componentDidMount()
     }
 
     deleteAll() {
