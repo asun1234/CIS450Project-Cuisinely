@@ -22,12 +22,12 @@ class TopCategory extends React.Component {
         if(!tenList) return;
         var arr= tenList.rows;
         var tenDivs = arr.map((category, i) => {
-          var cat = category.toString();
+          var cat = category[0].toString();
           var catCap = cat.charAt(0).toUpperCase() + cat.slice(1)
           return (<tr>
             <td>{i+1}</td>
             <td>{catCap}</td>
-            
+            <td>{category[1]}</td>
           </tr>);
         });
         this.setState({
@@ -39,13 +39,13 @@ class TopCategory extends React.Component {
   render() {
     return (
     <div className="results-container" id="results">
-      <h3>Top Ten Categories</h3>
+      <h3>Top 20 Categories</h3>
       <Table striped bordered hover>
         <thead>
           <tr>
             <th>#</th>
             <th>Category</th>
-            <th>Top Recipes</th>
+            <th>Avg. Rating</th>
           </tr>
         </thead>
         <tbody>

@@ -27,10 +27,10 @@ class HighProtein extends React.Component {
     this.setState({
       recipes: recipesArr
     })
-    
-    if(localStorage.getItem("recipeCartJSON") === null){
+
+    if (localStorage.getItem("recipeCartJSON") === null) {
       localStorage.setItem("recipeCartJSON", JSON.stringify(this.state.recipes));
-    }else{
+    } else {
       var existing = JSON.parse(localStorage.getItem('recipeCartJSON'));
       existing = existing.concat(this.state.recipes);
       var set = existing.filter((x, i, a) => a.indexOf(x) === i)
@@ -94,12 +94,6 @@ class HighProtein extends React.Component {
             {this.state.highPro}
           </tbody>
         </Table>
-
-        <div className="selected-recipes">
-          {this.state.recipes.map((recipe, i) =>
-            <p key={recipe}>Saved Recipe #{i + 1}: {recipe}</p>
-          )}
-        </div>
       </div>
     );
   }

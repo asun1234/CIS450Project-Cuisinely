@@ -1,7 +1,7 @@
 process.env.UV_THREADPOOL_SIZE = 10
 
 var config = require('./db-config.js');
-const secondsToWait = 650;
+const secondsToWait = 65000;
 config.connectionLimit = 100;
 var poolPromise = config;
 function queryDB(res, query, input) {
@@ -42,12 +42,23 @@ function getTopTen(req, res) {
 
 function getCategories(req, res) {
   var query = `
-  SELECT category
-  FROM (SELECT category, COUNT(recipeid) AS count
-  FROM recipe_categories
-  GROUP BY category
-  ORDER BY count DESC)
-  WHERE rownum <= 10
+  WITH top_20_categories AS (
+    SELECT category
+    FROM (SELECT category, COUNT(recipeid) AS count
+        FROM recipe_categories
+        GROUP BY category
+        ORDER BY count DESC)
+    WHERE rownum <= 20
+),
+     avg_ratings AS (
+         SELECT recipeid, category
+         FROM recipe_categories
+         WHERE category IN (SELECT category FROM top_20_categories)
+     )
+     SELECT INITCAP(category) as Category, ROUND(AVG(rating), 2) AS AverageRating
+     FROM avg_ratings JOIN recipes ON recipeId = id
+     GROUP BY category
+     ORDER BY AVG(rating) DESC
   `;
   queryDB(res, query, '')
 };
