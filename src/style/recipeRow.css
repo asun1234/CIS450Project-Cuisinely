@@ -1,0 +1,29 @@
+#title {
+    text-align: center;
+    font-family: arial, sans-serif;
+}
+
+#rows {
+    text-align: left;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border: 3px solid #ddd;
+    width: 100%;
+}
+
+#rows td, #rows th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#rows tr:nth-child(even){background-color: #f2f2f2;}
+
+#rows tr:hover {background-color: #ddd;}
+
+#rows th, #tr{
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #33BEFF;
+    color: white;
+}
