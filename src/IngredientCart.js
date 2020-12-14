@@ -1,17 +1,59 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Table } from 'react-bootstrap';
-import Checkbox from '@material-ui/core/Checkbox';
-import './style/Dashboard.css';
 
 class IngredientCart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            ingredList: []
+            ingredList: [],
+            justIngred: [], 
+            midDivs:[]
         };
         this.componentDidMount = this.componentDidMount.bind(this);
     }
+
+    getIngredient(recipeTitle) {
+        fetch(`http://localhost:8081/ingredientCart/${recipeTitle}`, {
+            method: "GET",
+        })
+            .then(res => res.json())
+            // eslint-disable-next-line no-loop-func
+            .then(searchResults => {
+                if (!searchResults) return;
+                var searchIng = searchResults.rows;
+                console.log(searchIng);
+                if (this.state.justIngred.length > 0) {
+                    var oldDivs = this.state.justIngred;
+                    oldDivs = [...new Set(oldDivs)];
+                    searchIng = oldDivs.concat(searchIng);
+                    searchIng = [...new Set(searchIng)];
+                }
+                searchIng = searchIng.sort();
+                var i;
+                var divs = [];
+                const finalSet = new Set();
+                var index = 0;
+                for (i = 0; i < searchIng.length; i++) {
+                    const currIng = searchIng[i][0];
+                    if(!finalSet.has(currIng)){
+                        divs[index] = (
+                            <tr key={index + 1}>
+                                <td>{index + 1}</td>
+                                <td>{currIng}</td>
+                            </tr>);
+                        index++;
+                        finalSet.add(currIng);
+                    }
+                }
+                //console.log(divs);
+                this.setState({
+                    justIngred: searchIng,
+                    ingredList: divs
+                })
+            })
+    }
+
 
     componentDidMount() {
         var recipes = JSON.parse(localStorage.getItem("recipeToIng"));
@@ -21,34 +63,6 @@ class IngredientCart extends React.Component {
         }
     }
 
-    getIngredient(recipeTitle){
-        fetch(`http://localhost:8081/ingredientCart/${recipeTitle}`, {
-            method: "GET",
-        })
-            .then(res => res.json())
-            // eslint-disable-next-line no-loop-func
-            .then(searchResults => {
-                if (!searchResults) return;
-                var arr = searchResults.rows;
-                var searchDivs = arr.map((recipe, i) => {
-                    return (
-                        <tr>
-                            <td>{i+1}</td>
-                            <td>{recipe}</td>
-                        </tr>
-                    );
-                });
-
-                if (this.state.ingredList.length > 0) {
-                    var oldDivs = this.state.ingredList;
-                    oldDivs = oldDivs.concat(searchDivs);
-                    searchDivs = oldDivs.filter((x, i, a) => a.indexOf(x) === i)
-                }
-                this.setState({
-                    ingredList: searchDivs
-                })
-            })
-    }
     render() {
         return (
             <div className="results-container" id="results">

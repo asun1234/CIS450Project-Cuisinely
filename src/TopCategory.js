@@ -27,6 +27,7 @@ class TopCategory extends React.Component {
           return (<tr>
             <td>{i+1}</td>
             <td>{catCap}</td>
+            
           </tr>);
         });
         this.setState({
@@ -44,6 +45,7 @@ class TopCategory extends React.Component {
           <tr>
             <th>#</th>
             <th>Category</th>
+            <th>Top Recipes</th>
           </tr>
         </thead>
         <tbody>
