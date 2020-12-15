@@ -104,7 +104,6 @@ class IngredientCart extends React.Component {
                         <tr>
                             <th>#</th>
                             <th>Ingredient</th>
-                            <th>Delete Ingredient</th>
                         </tr>
                     </thead>
                     <tbody>

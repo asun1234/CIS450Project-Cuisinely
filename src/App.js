@@ -40,7 +40,7 @@ class App extends React.Component{
       <div>
   <Navbar bg="primary" variant="dark" sticky="top" >
   <Navbar.Brand href="#">
-  Recipe Search 👩🏻‍🍳
+  Cuisinely 👩🏻‍🍳
     </Navbar.Brand>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="responsive-navbar-nav">
@@ -85,7 +85,7 @@ class App extends React.Component{
             <Route path="/toprecs" component={TopHistory}/>
             <Route path="/suggestedRecipes" component={SuggestedRecipes}/>
             <Route exact path="/">
-            <h3>Welcome to our recipes app! Happy cooking :)</h3>
+            <h3>Welcome to Cuisinely! Happy cooking :)</h3>
             <div className="results-container" id="results">
               <p></p>
               {gif[randIndex]}

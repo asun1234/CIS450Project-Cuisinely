@@ -1,5 +1,6 @@
 var oracledb = require('oracledb');
 
+//change this config to match the location of your local directory
 oracledb.initOracleClient({ libDir: '/Users/angelasun1234/Downloads/instantclient_19_8' });
 
 module.exports = oracledb.createPool({
