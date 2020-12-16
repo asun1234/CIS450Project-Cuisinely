@@ -66,10 +66,11 @@ function getCategories(req, res) {
 function getSearch(req, res) {
   var input = req.params.byTitle;
   var query = `
-SELECT *
-FROM (SELECT * FROM recipes WHERE LOWER(recipetitle) LIKE '%${input}%')
-WHERE rownum <= 50
-ORDER BY rating DESC
+  SELECT *
+  FROM (SELECT *
+       FROM recipes
+       WHERE LOWER(recipetitle) LIKE '%${input}%')
+  ORDER BY rating DESC  
 `;
   queryDB(res, query, input)
 };
@@ -78,11 +79,8 @@ function getSearchIngredient(req, res) {
   var input = req.params.byIngredient;
   var query = `
   SELECT *
-  FROM recipes
-  WHERE id IN (SELECT recipeid FROM (SELECT recipeid
-  FROM recipe_ingredients
-  WHERE LOWER(ingredient) LIKE '%${input}%'))
-  AND rownum <= 50
+  FROM recipes r INNER JOIN recipe_ingredients ringr ON r.id=ringr.recipeid
+  WHERE LOWER(ringr.ingredient) LIKE '%${input}%'
   ORDER BY rating DESC
 `;
   queryDB(res, query, input)
@@ -90,26 +88,16 @@ function getSearchIngredient(req, res) {
 
 function getLowCal(req, res) {
   var query = `
-  WITH low_cal_recipes AS
-  (SELECT recipeid, calories FROM nutrition_data
-    WHERE calories < 300),
-    ans as (SELECT recipetitle, calories, r.rating
-    FROM low_cal_recipes c JOIN recipes r ON recipeid = id
-    ORDER BY calories ASC, r.rating DESC)
-    SELECT * FROM ans WHERE rownum <= 30
+  SELECT * FROM lowCalRecipes
+  WHERE rownum<=30
     `;
   queryDB(res, query, '')
 };
 
 function getHighProtein(req, res) {
   var query = `
-  WITH low_cal_recipes AS
-  (SELECT recipeid, protein FROM nutrition_data
-    WHERE protein > 15),
-    ans as (SELECT recipetitle, protein, r.rating
-    FROM low_cal_recipes c JOIN recipes r ON recipeid = id
-    ORDER BY protein DESC, r.rating DESC)
-    SELECT * FROM ans WHERE rownum <= 30
+  SELECT * FROM highProteinRecipes
+  WHERE rownum<=30
     `;
   queryDB(res, query, '')
 };
@@ -117,53 +105,36 @@ function getHighProtein(req, res) {
 function getIngredientsByRecipe(req, res) {
   var input = req.params.recipeTitle;
   var query = `
-  SELECT DISTINCT ingredient
-  FROM recipe_ingredients r
-  WHERE r.recipeId IN
-  (SELECT id
+  WITH givenrecipe AS (SELECT id
     FROM recipes
     WHERE recipetitle LIKE '%${input}')
-    ORDER BY ingredient ASC
+SELECT DISTINCT ingredient
+FROM recipe_ingredients r JOIN givenrecipe gr ON r.RECIPEID=gr.ID
+ORDER BY ingredient ASC
   `;
   queryDB(res, query, input)
 };
 
 function getLowFat(req, res) {
   var query = `
-  WITH low_cal_recipes AS 
-  (SELECT recipeid, totalfat FROM nutrition_data 
-    WHERE totalfat < 10),
-    ans as (SELECT recipetitle, totalfat, r.rating
-    FROM low_cal_recipes c JOIN recipes r ON recipeid = id
-    ORDER BY totalfat ASC, r.rating DESC)
-    SELECT * FROM ans WHERE rownum <= 30
+  SELECT * FROM lowFatRecipes
+WHERE rownum<=30
     `;
   queryDB(res, query, '')
 };
 
 function getLowCarb(req, res) {
   var query = `
-  WITH low_cal_recipes AS
-  (SELECT recipeid, carbohydrates FROM nutrition_data
-    WHERE carbohydrates < 10),
-    ans as (SELECT recipetitle, carbohydrates, r.rating
-    FROM low_cal_recipes c JOIN recipes r ON recipeid = id
-    ORDER BY carbohydrates ASC, r.rating DESC)
-    SELECT * FROM ans WHERE rownum <= 30
+  SELECT * FROM lowCarbRecipes
+WHERE rownum<=30
     `;
   queryDB(res, query, '')
 };
 
 function getLowSugar(req, res) {
   var query = `
-  WITH low_cal_recipes AS
-  (SELECT recipeid, sugar FROM nutrition_data
-    WHERE sugar < 10),
-    ans as (SELECT recipetitle, sugar, r.rating
-    FROM low_cal_recipes c JOIN recipes r ON recipeid = id
-    ORDER BY sugar ASC, r.rating DESC)
-    SELECT * FROM ans WHERE rownum <= 30
-    `;
+  SELECT * FROM lowSugarRecipes
+  WHERE rownum<=30`;
   queryDB(res, query, '')
 };
 
